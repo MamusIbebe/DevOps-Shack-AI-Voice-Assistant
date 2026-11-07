@@ -5,7 +5,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir uv==0.13.7
+# Pick up OS security fixes newer than the base image (e.g. zlib), and replace the
+# outdated setuptools/wheel that ship with the base image's Python.
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir uv==0.13.7
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
