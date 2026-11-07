@@ -6,12 +6,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Pick up OS security fixes newer than the base image (e.g. zlib), and replace the
-# outdated setuptools/wheel that ship with the base image's Python.
+# outdated pip/setuptools/wheel that ship with the base image's Python. ensurepip's
+# bundled setuptools wheel is old too (CVE-2025-47273); nothing here uses ensurepip
+# (uv builds the app's environment), so it is removed.
 RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir --upgrade pip setuptools wheel \
-    && pip install --no-cache-dir uv==0.13.7
+    && pip install --no-cache-dir uv==0.13.7 \
+    && rm -f /usr/local/lib/python3.11/ensurepip/_bundled/setuptools-*.whl
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
