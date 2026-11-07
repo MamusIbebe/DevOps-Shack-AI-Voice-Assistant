@@ -3,6 +3,9 @@ services:
     build:
       context: .
     container_name: devops-shack-voiceops
+    # The Docker socket is owned by root on the host, so this demo variant runs as root
+    # to read it. compose.safe.yaml keeps the image's unprivileged user.
+    user: "0:0"
     ports:
       - "8000:8000"
     env_file:

@@ -9,3 +9,5 @@ README.md
 run-local.sh
 run-local.ps1
 requirements.txt
+tests/
+.github/

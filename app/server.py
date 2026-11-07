@@ -5,10 +5,10 @@ import json
 import logging
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from google import genai
 from google.genai import types
@@ -41,12 +41,18 @@ LIVE_CONFIG = {
 }
 
 app = FastAPI(title="DevOps Shack VoiceOps Assistant", version="1.0.0")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
+
+def _same_origin(websocket: WebSocket) -> bool:
+    """Only accept the voice socket from pages served by this app.
+
+    Without this, any website you visit could open /ws in the background
+    and use your Gemini key (cross-site WebSocket hijacking).
+    """
+    origin = websocket.headers.get("origin")
+    if not origin:
+        return True  # non-browser clients (curl, tests) send no Origin
+    return urlsplit(origin).netloc == websocket.headers.get("host", "")
 
 
 @app.get("/api/health")
@@ -61,6 +67,10 @@ def health():
 
 @app.websocket("/ws")
 async def voice_socket(websocket: WebSocket):
+    if not _same_origin(websocket):
+        log.warning("Rejected voice socket from origin %s", websocket.headers.get("origin"))
+        await websocket.close(code=1008)
+        return
     await websocket.accept()
     log.info("Browser connected; opening Gemini Live session (model=%s, voice=%s)", MODEL, VOICE)
 
@@ -161,7 +171,7 @@ async def voice_socket(websocket: WebSocket):
                 "message": f"{type(exc).__name__}: {exc}",
             }))
         except Exception:
-            pass
+            log.debug("Could not send the error to the browser; it has probably disconnected")
 
 
 FRONTEND = ROOT / "frontend"
