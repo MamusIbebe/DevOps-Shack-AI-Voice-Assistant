@@ -980,6 +980,26 @@
     }
 
 
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-row .btn {
+      min-height: 44px;
+    }
+
+    .btn[hidden] {
+      display: none;
+    }
+
+    .btn.btn-secondary {
+      color: #1e293b;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: none;
+    }
+
     .btn {
       position: relative;
 
@@ -2029,9 +2049,20 @@
             🎙 Start Live Session
           </button>
 
+          <div class="btn-row">
+            <button id="stopTalking" class="btn btn-secondary" hidden>
+              ⏹ Stop talking
+            </button>
+            <button id="endSession" class="btn btn-secondary" hidden>
+              End session
+            </button>
+          </div>
+
           <div class="helper-text">
             Use headphones for cleaner audio and
             more accurate voice transcription.
+            Press Esc, click Stop talking, or just
+            start speaking to interrupt.
           </div>
 
         </div>

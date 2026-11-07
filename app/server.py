@@ -122,6 +122,9 @@ async def voice_socket(websocket: WebSocket):
                     if getattr(server_content, "interrupted", None):
                         await websocket.send_text(json.dumps({"type": "interrupted"}))
 
+                    if getattr(server_content, "turn_complete", None):
+                        await websocket.send_text(json.dumps({"type": "turn_complete"}))
+
                 if tool_call:
                     responses = []
                     for call in tool_call.function_calls:

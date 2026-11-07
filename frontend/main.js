@@ -6,6 +6,8 @@ const txEl = $("transcript");
 const activityEl = $("activity");
 const connBadge = $("connBadge");
 const talkBtn = $("talk");
+const stopBtn = $("stopTalking");
+const endBtn = $("endSession");
 
 const BARGE_RMS = 0.02;
 
@@ -18,6 +20,15 @@ let nextStart = 0;
 let activeSources = [];
 let speaking = false;
 let started = false;
+
+/*
+  After the user interrupts (Stop button, Esc, or speaking over the
+  assistant), Gemini may still be sending the rest of its answer.
+  Drop that audio until Gemini confirms the interruption or ends its turn,
+  otherwise playback silently restarts with the next chunk.
+*/
+let dropAssistantAudio = false;
+let endedByUser = false;
 
 // Keep track of the currently streaming transcript bubble
 let activeTranscriptBubble = null;
@@ -303,6 +314,10 @@ function escapeHtml(text) {
 ------------------------------------------------------- */
 
 function playVoice(buf) {
+  if (dropAssistantAudio) {
+    return;
+  }
+
   const int16 = new Int16Array(buf);
 
   const f32 = new Float32Array(
@@ -381,7 +396,11 @@ function playVoice(buf) {
 }
 
 
-function stopVoice() {
+function stopVoice(dropRest = false) {
+  if (dropRest) {
+    dropAssistantAudio = true;
+  }
+
   activeSources.forEach((source) => {
     try {
       source.stop();
@@ -432,6 +451,9 @@ function connect() {
       "● Live session active";
 
     talkBtn.disabled = true;
+
+    stopBtn.hidden = false;
+    endBtn.hidden = false;
   };
 
 
@@ -440,13 +462,27 @@ function connect() {
   ws.onclose = () => {
     setConnection(false);
 
+    stopVoice();
+    releaseMic();
+
     setStatus(
-      "Connection dropped. Refresh the page to start again."
+      endedByUser
+        ? "Session ended. Start a new one whenever you like."
+        : "Connection dropped. Click Start to reconnect."
     );
 
     setOrb("idle");
 
     started = false;
+    endedByUser = false;
+    dropAssistantAudio = false;
+
+    talkBtn.disabled = false;
+    talkBtn.textContent =
+      "🎙 Start Live Session";
+
+    stopBtn.hidden = true;
+    endBtn.hidden = true;
   };
 
 
@@ -501,7 +537,7 @@ function connect() {
           m.text
         );
 
-      } else {
+      } else if (!dropAssistantAudio) {
 
         addLine(
           "agent",
@@ -529,6 +565,18 @@ function connect() {
     if (m.type === "interrupted") {
 
       stopVoice();
+
+      dropAssistantAudio = false;
+
+      return;
+    }
+
+
+    /* Assistant finished its turn */
+
+    if (m.type === "turn_complete") {
+
+      dropAssistantAudio = false;
 
       return;
     }
@@ -701,7 +749,7 @@ async function startMic() {
       e.data.rms >= BARGE_RMS &&
       speaking
     ) {
-      stopVoice();
+      stopVoice(true);
     }
 
   };
@@ -821,13 +869,80 @@ async function go() {
 
 
 /* -------------------------------------------------------
-   START BUTTON
+   STOP TALKING / END SESSION
+------------------------------------------------------- */
+
+function stopTalking() {
+  if (!started) {
+    return;
+  }
+
+  stopVoice(true);
+
+  setStatus(
+    "Stopped. Ask your next question when ready."
+  );
+}
+
+
+function releaseMic() {
+  if (micStream) {
+    micStream
+      .getTracks()
+      .forEach((t) => t.stop());
+    micStream = null;
+  }
+
+  if (workletNode) {
+    workletNode.port.onmessage = null;
+    workletNode.disconnect();
+    workletNode = null;
+  }
+
+  if (audioCtx) {
+    audioCtx.close().catch(() => {});
+    audioCtx = null;
+  }
+}
+
+
+function endSession() {
+  endedByUser = true;
+
+  stopVoice(true);
+
+  if (ws && ws.readyState <= WebSocket.OPEN) {
+    ws.close();
+  } else {
+    releaseMic();
+  }
+}
+
+
+/* -------------------------------------------------------
+   BUTTONS AND KEYBOARD
 ------------------------------------------------------- */
 
 talkBtn.addEventListener(
   "click",
   go
 );
+
+stopBtn.addEventListener(
+  "click",
+  stopTalking
+);
+
+endBtn.addEventListener(
+  "click",
+  endSession
+);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    stopTalking();
+  }
+});
 
 
 /* -------------------------------------------------------
