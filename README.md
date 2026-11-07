@@ -273,6 +273,29 @@ How would you troubleshoot a failed Jenkins pipeline?
 
 For conceptual DevOps questions, Gemini answers directly. For supported diagnostics, Gemini can invoke a read-only tool and the UI displays the tool activity and result.
 
+## Security checks (CI/CD)
+
+Every push and pull request runs `.github/workflows/security.yml` on GitHub Actions:
+
+| Check | Tool | Fails when |
+| --- | --- | --- |
+| Unit tests | pytest | a test fails |
+| Vulnerable libraries | pip-audit | a locked dependency has a known CVE |
+| Insecure code | bandit | a medium or high finding in `app/` |
+| Leaked secrets | gitleaks | an API key or token is found in git history |
+| Container image | Trivy | the Dockerfile is misconfigured, or the image has a fixable high/critical CVE |
+| Running app | OWASP ZAP baseline | report only (download `zap-report` from the run) |
+
+Run the same checks locally:
+
+```bash
+uv run pytest
+uv export --frozen --no-hashes --no-dev > /tmp/req.txt && uvx pip-audit -r /tmp/req.txt
+uvx bandit -r app -ll
+```
+
+Built-in protections: the voice socket only accepts pages served by this app (same origin), the HTTP and port tools refuse link-local/cloud-metadata addresses and do not follow redirects, and the container runs as an unprivileged user.
+
 ## Documentation
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — application and runtime architecture

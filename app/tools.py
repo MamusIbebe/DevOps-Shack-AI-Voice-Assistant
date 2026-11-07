@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import http.client
+import ipaddress
 import json
 import os
 import socket
+import urllib.error
+import urllib.parse
 import urllib.request
 import shutil
 import time
@@ -57,6 +60,35 @@ TOOL_DECLARATIONS = [
         "parameters": {"type": "object", "properties": {}},
     },
 ]
+
+
+def _blocked_reason(host: str) -> str:
+    """Return why a host must not be checked, or "" if it is allowed.
+
+    Link-local addresses (169.254.0.0/16, fe80::/10) include the cloud
+    metadata service, which can hand out the server's cloud credentials.
+    Localhost and private LAN addresses stay allowed: checking your own
+    services is what these tools are for.
+    """
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except OSError:
+        return ""  # unresolvable: the connect attempt will report it
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        if ip.is_link_local or ip.is_multicast or ip.is_unspecified:
+            return f"{host} resolves to {ip}, a link-local/metadata address that this tool does not check."
+    return ""
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Report redirects instead of following them, so a redirect cannot reach a blocked address."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
 
 
 def _gb(value: float) -> float:
@@ -154,6 +186,13 @@ def local_port(host: str, port: int) -> Tuple[Dict[str, Any], Dict[str, Any]]:
             _event("check_local_port", "Local Port Check", summary, f"TCP connect to {host}:{port}", "Valid ports are 1-65535.", False),
             {"result": "failed", "reachable": False, "summary": summary},
         )
+    blocked = _blocked_reason(host)
+    if blocked:
+        summary = f"Port checks on {host} are not allowed."
+        return (
+            _event("check_local_port", "Local Port Check", summary, f"TCP connect to {host}:{port}", blocked, False),
+            {"result": "failed", "host": host, "port": port, "reachable": False, "summary": summary},
+        )
     try:
         with socket.create_connection((host, port), timeout=2):
             summary = f"Port {port} on {host} is reachable."
@@ -176,10 +215,22 @@ def http_endpoint(url: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
             _event("check_http_endpoint", "HTTP Endpoint Check", summary, f"HTTP GET {url}", "Invalid URL scheme.", False),
             {"result": "failed", "url": url, "summary": summary},
         )
+    host = urllib.parse.urlsplit(url).hostname or ""
+    blocked = _blocked_reason(host) if host else "The URL has no hostname."
+    if blocked:
+        summary = f"Endpoint checks on {host or url} are not allowed."
+        return (
+            _event("check_http_endpoint", "HTTP Endpoint Check", summary, f"HTTP GET {url}", blocked, False),
+            {"result": "failed", "url": url, "summary": summary},
+        )
     try:
         request = urllib.request.Request(url, headers={"User-Agent": "DevOpsShackVoiceOps/1.0"})
-        with urllib.request.urlopen(request, timeout=5) as response:
-            code = response.getcode()
+        try:
+            with _OPENER.open(request, timeout=5) as response:  # nosec B310 - scheme limited to http(s) above
+                code = response.getcode()
+        except urllib.error.HTTPError as err:
+            # 3xx (redirects are not followed), 4xx and 5xx still mean the endpoint answered.
+            code = err.code
         ok = 200 <= code < 400
         summary = f"Endpoint returned HTTP {code}."
         return (
