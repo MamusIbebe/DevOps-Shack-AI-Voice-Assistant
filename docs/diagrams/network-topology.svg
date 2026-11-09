@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1130" viewBox="0 0 1600 1130" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1730" viewBox="0 0 1600 1730" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
   <defs>
     <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1E4FB8"/></marker>
     <marker id="aO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E8590C"/></marker>
@@ -9,10 +9,15 @@
       .sub{font-size:17px;fill:#475569}
       .h{font-size:18px;font-weight:700;fill:#0F172A}
       .t{font-size:15.5px;font-weight:600;fill:#0F172A}
+      .ts{font-size:14px;font-weight:600;fill:#0F172A}
       .s{font-size:13px;fill:#475569}
+      .xs{font-size:12px;fill:#475569}
       .code{font-family:'JetBrains Mono',Consolas,monospace;font-size:12px;fill:#334155}
       .lbl{font-size:12.5px;font-weight:600}
       .zone{font-size:14px;font-weight:700}
+      .badge{font-size:13px;font-weight:700;fill:#fff}
+      .stept{font-size:15px;font-weight:700;fill:#0F172A}
+      .step{font-size:13.5px;fill:#334155}
       .box{fill:#fff;stroke-width:1.5}
       .blue{stroke:#1E4FB8;stroke-width:3;fill:none;marker-end:url(#aB)}
       .orange{stroke:#E8590C;stroke-width:2.4;fill:none;stroke-dasharray:8 5;marker-end:url(#aO)}
@@ -20,58 +25,54 @@
       .gray{stroke:#475569;stroke-width:2.2;fill:none;stroke-dasharray:4 4;marker-end:url(#aG)}
     </style>
   </defs>
-  <rect width="1600" height="1130" fill="#F8FAFC"/>
-
+  <rect width="1600" height="1730" fill="#F8FAFC"/>
   <text x="40" y="58" class="title">VoiceOps Assistant: Network Topology</text>
-  <text x="40" y="88" class="sub">Where each piece runs on AWS, and the only paths traffic can take in and out.</text>
+  <text x="40" y="88" class="sub">Where each component runs, how they connect, and the only paths traffic can take in and out. Gold numbers match the steps at the bottom.</text>
 
-  <!-- Friend device -->
+  <!-- Friend + Cloudflare -->
   <rect x="40" y="125" width="340" height="96" rx="14" class="box" stroke="#E8590C"/>
   <text x="60" y="153" class="t">A friend's device (optional)</text>
   <text x="60" y="174" class="s">Any browser, anywhere</text>
   <text x="60" y="196" class="code">https://&lt;random&gt;.trycloudflare.com</text>
-
-  <!-- Cloudflare -->
   <rect x="640" y="125" width="460" height="96" rx="14" class="box" stroke="#E8590C"/>
   <text x="660" y="153" class="t">Cloudflare edge (quick tunnel)</text>
   <text x="660" y="174" class="s">Gives a temporary public HTTPS link.</text>
   <text x="660" y="194" class="s">The link changes every time the tunnel restarts.</text>
+  <path d="M380 173 H636" class="orange"/>
+  <text x="430" y="163" class="lbl" fill="#E8590C">HTTPS :443</text>
 
-  <!-- Your PC -->
-  <rect x="40" y="330" width="340" height="290" rx="14" class="box" stroke="#1E4FB8" stroke-width="2"/>
+  <!-- PC -->
+  <rect x="40" y="330" width="340" height="360" rx="14" class="box" stroke="#1E4FB8" stroke-width="2"/>
   <text x="60" y="360" class="h">Your Windows PC</text>
-  <rect x="60" y="378" width="300" height="70" rx="10" fill="#EEF4FF" stroke="#9DB7EE"/>
-  <text x="76" y="402" class="t">Browser</text>
-  <text x="76" y="424" class="code">http://localhost:8000</text>
-  <text x="76" y="440" class="s">Mic and speaker live here</text>
-  <rect x="60" y="460" width="300" height="88" rx="10" fill="#EEF4FF" stroke="#9DB7EE"/>
-  <text x="76" y="484" class="t">SSH client (PowerShell)</text>
-  <text x="76" y="505" class="code">ssh -i key.pem</text>
-  <text x="76" y="521" class="code">  -L 8000:localhost:8000</text>
-  <text x="76" y="537" class="code">  ubuntu@&lt;EC2 public IP&gt;</text>
-  <text x="60" y="574" class="s">Port 8000 on your PC is forwarded</text>
-  <text x="60" y="592" class="s">through SSH to port 8000 on the server.</text>
-  
+  <rect x="60" y="378" width="300" height="150" rx="10" fill="#EEF4FF" stroke="#9DB7EE"/>
+  <circle cx="84" cy="402" r="12" fill="#C8961E"/><text x="84" y="407" class="badge" text-anchor="middle">1</text>
+  <text x="104" y="407" class="t">Browser</text>
+  <text x="76" y="430" class="code">http://localhost:8000</text>
+  <text x="76" y="452" class="s">• Page from frontend/ (HTML + JS)</text>
+  <text x="76" y="471" class="s">• Mic in, speaker out</text>
+  <text x="76" y="490" class="s">• Opens the WebSocket to /ws</text>
+  <text x="76" y="509" class="s">• Shows transcript and tool cards</text>
+  <rect x="60" y="540" width="300" height="88" rx="10" fill="#EEF4FF" stroke="#9DB7EE"/>
+  <text x="76" y="564" class="t">SSH client (PowerShell)</text>
+  <text x="76" y="585" class="code">ssh -i key.pem</text>
+  <text x="76" y="601" class="code">  -L 8000:localhost:8000</text>
+  <text x="76" y="617" class="code">  ubuntu@&lt;EC2 public IP&gt;</text>
+  <text x="60" y="652" class="s">Port 8000 on your PC is forwarded</text>
+  <text x="60" y="670" class="s">through SSH to port 8000 on the server.</text>
 
-  <!-- AWS cloud -->
-  <rect x="460" y="270" width="700" height="640" rx="18" fill="#FFF6EA" stroke="#F59E0B" stroke-width="2"/>
+  <!-- AWS -->
+  <rect x="460" y="270" width="700" height="790" rx="18" fill="#FFF6EA" stroke="#F59E0B" stroke-width="2"/>
   <text x="482" y="298" class="zone" fill="#B45309">AWS Cloud · your Region</text>
-
-  <rect x="530" y="315" width="610" height="575" rx="14" fill="#F3FBF4" stroke="#2F9E44" stroke-width="1.8"/>
+  <rect x="530" y="315" width="610" height="725" rx="14" fill="#F3FBF4" stroke="#2F9E44" stroke-width="1.8"/>
   <text x="550" y="340" class="zone" fill="#2B7A3B">VPC (default) · public subnet</text>
-
-  <!-- Internet gateway -->
-  <rect x="478" y="440" width="104" height="62" rx="10" fill="#fff" stroke="#B45309" stroke-width="1.6"/>
-  <text x="530" y="466" class="t" text-anchor="middle" font-size="14">Internet</text>
-  <text x="530" y="486" class="t" text-anchor="middle" font-size="14">gateway</text>
-
-  <!-- Security group -->
-  <rect x="620" y="360" width="500" height="510" rx="12" fill="none" stroke="#E03131" stroke-width="2" stroke-dasharray="9 5"/>
+  <rect x="478" y="520" width="104" height="62" rx="10" fill="#fff" stroke="#B45309" stroke-width="1.6"/>
+  <text x="530" y="546" class="ts" text-anchor="middle">Internet</text>
+  <text x="530" y="566" class="ts" text-anchor="middle">gateway</text>
+  <rect x="620" y="360" width="500" height="660" rx="12" fill="none" stroke="#E03131" stroke-width="2" stroke-dasharray="9 5"/>
   <rect x="636" y="348" width="330" height="24" rx="6" fill="#FFF0F0"/>
   <text x="646" y="365" class="zone" fill="#C92A2A" font-size="13.5">Security group: inbound TCP 22 (SSH) only</text>
 
-  <!-- EC2 -->
-  <rect x="645" y="395" width="455" height="455" rx="12" fill="#fff" stroke="#F59E0B" stroke-width="2"/>
+  <rect x="645" y="395" width="455" height="605" rx="12" fill="#fff" stroke="#F59E0B" stroke-width="2"/>
   <text x="665" y="424" class="h">EC2 instance · Ubuntu</text>
   <text x="665" y="444" class="s">Public IPv4 changes each stop/start (unless an Elastic IP)</text>
 
@@ -79,91 +80,158 @@
   <text x="680" y="490" class="t">sshd</text>
   <text x="680" y="510" class="code">port 22 (open)</text>
   <text x="680" y="527" class="s">Ends the SSH tunnel</text>
-
   <rect x="875" y="465" width="205" height="72" rx="10" fill="#FFF4E6" stroke="#E8590C" stroke-dasharray="6 4"/>
   <text x="890" y="490" class="t">cloudflared</text>
   <text x="890" y="510" class="s">Optional. Dials out only,</text>
   <text x="890" y="527" class="s">opens no inbound port</text>
 
-  <rect x="665" y="590" width="415" height="92" rx="10" fill="#FFF8EB" stroke="#C8961E" stroke-width="2"/>
-  <text x="680" y="616" class="t">voiceops (systemd service)</text>
-  <text x="680" y="637" class="code">uvicorn app.server:app on 127.0.0.1:8000</text>
-  <text x="680" y="656" class="s">Listens on localhost only, so the internet can't reach it</text>
-  <text x="680" y="673" class="s">directly. Starts by itself when the instance boots.</text>
+  <!-- voiceops service -->
+  <rect x="665" y="580" width="415" height="275" rx="12" fill="#FFF8EB" stroke="#C8961E" stroke-width="2"/>
+  <text x="680" y="603" class="ts" fill="#8A5A00">voiceops (systemd service, starts at boot)</text>
+  <rect x="678" y="614" width="389" height="230" rx="10" fill="#fff" stroke="#C8961E"/>
+  <circle cx="698" cy="636" r="12" fill="#C8961E"/><text x="698" y="641" class="badge" text-anchor="middle">3</text>
+  <text x="716" y="641" class="t">Uvicorn</text>
+  <text x="790" y="641" class="code">127.0.0.1:8000 (local only)</text>
+  <rect x="690" y="656" width="365" height="178" rx="10" fill="#FFFDF7" stroke="#E4C77A"/>
+  <circle cx="710" cy="678" r="12" fill="#C8961E"/><text x="710" y="683" class="badge" text-anchor="middle">4</text>
+  <text x="728" y="683" class="t">FastAPI app</text>
+  <text x="826" y="683" class="code">app/server.py</text>
+  <text x="704" y="704" class="xs">Serves the page, /api/health and /ws</text>
+  <!-- three inner components -->
+  <rect x="700" y="716" width="110" height="108" rx="9" fill="#EEF4FF" stroke="#3B6FD8"/>
+  <circle cx="718" cy="736" r="11" fill="#C8961E"/><text x="718" y="741" class="badge" text-anchor="middle">2</text>
+  <text x="732" y="741" class="ts" font-size="13">WebSocket</text>
+  <text x="710" y="762" class="code">/ws</text>
+  <text x="710" y="782" class="xs">Two-way live</text>
+  <text x="710" y="798" class="xs">audio channel</text>
+  <text x="710" y="814" class="xs">to the browser</text>
+  <rect x="818" y="716" width="110" height="108" rx="9" fill="#FFF4E6" stroke="#B7791F"/>
+  <circle cx="836" cy="736" r="11" fill="#C8961E"/><text x="836" y="741" class="badge" text-anchor="middle">7</text>
+  <text x="850" y="741" class="ts" font-size="13">DevOps</text>
+  <text x="828" y="760" class="ts" font-size="13">tool functions</text>
+  <text x="828" y="780" class="xs">app/tools.py</text>
+  <text x="828" y="798" class="xs">CPU, ports,</text>
+  <text x="828" y="814" class="xs">URLs, Docker</text>
+  <rect x="936" y="716" width="110" height="108" rx="9" fill="#F4F0FF" stroke="#7A5AF8"/>
+  <circle cx="954" cy="736" r="11" fill="#C8961E"/><text x="954" y="741" class="badge" text-anchor="middle">5</text>
+  <text x="968" y="741" class="ts" font-size="13">Google</text>
+  <text x="946" y="760" class="ts" font-size="13">GenAI SDK</text>
+  <text x="946" y="780" class="xs">Opens the live</text>
+  <text x="946" y="798" class="xs">Gemini session</text>
+  <text x="946" y="814" class="xs">with the API key</text>
 
-  <rect x="665" y="715" width="415" height="115" rx="10" fill="#F8FAFC" stroke="#94A3B8"/>
-  <text x="680" y="740" class="t">On disk</text>
-  <text x="680" y="761" class="code">~/DevOps-Shack-AI-Voice-Assistant</text>
-  <text x="680" y="780" class="s">App code (cloned from GitHub) and its uv virtual env</text>
-  <text x="680" y="800" class="code">.env</text><text x="716" y="800" class="s">→ GEMINI_API_KEY (private, never in Git)</text>
-  <text x="680" y="819" class="s">docker.sock, if Docker is installed (for the container tool)</text>
+  <rect x="665" y="875" width="415" height="110" rx="10" fill="#F8FAFC" stroke="#94A3B8"/>
+  <text x="680" y="899" class="t">On disk</text>
+  <text x="680" y="920" class="code">~/DevOps-Shack-AI-Voice-Assistant</text>
+  <text x="680" y="939" class="s">App code (cloned from GitHub) and its uv virtual env</text>
+  <text x="680" y="958" class="code">.env</text><text x="716" y="958" class="s">→ GEMINI_API_KEY (private, never in Git)</text>
+  <text x="680" y="976" class="s">docker.sock, if Docker is installed (for the tools)</text>
 
-  <!-- tunnels inside EC2 -->
-  <path d="M760 537 V586" stroke="#1E4FB8" stroke-width="3" fill="none" marker-end="url(#aB)"/>
-  <text x="768" y="567" class="lbl" fill="#1E4FB8">to 127.0.0.1:8000</text>
-  <path d="M977 537 V586" class="orange"/>
-  <text x="985" y="567" class="lbl" fill="#E8590C">to :8000</text>
+  <!-- internal arrows -->
+  <path d="M760 537 V576" stroke="#1E4FB8" stroke-width="3" fill="none" marker-end="url(#aB)"/>
+  <text x="768" y="560" class="lbl" fill="#1E4FB8">to 127.0.0.1:8000</text>
+  <path d="M977 537 V576" class="orange"/>
+  <text x="985" y="560" class="lbl" fill="#E8590C">to :8000</text>
 
-  <!-- PC SSH path -->
-  <path d="M360 504 H420 V471 H474" class="blue"/>
-  <path d="M582 471 H600 V500 H661" class="blue"/>
-  <text x="392" y="462" class="lbl" fill="#1E4FB8">SSH :22</text>
-  <text x="392" y="526" class="lbl" fill="#1E4FB8">encrypted</text>
+  <!-- SSH path -->
+  <path d="M360 584 H420 V551 H474" class="blue"/>
+  <path d="M582 551 H600 V500 H661" class="blue"/>
+  <text x="392" y="542" class="lbl" fill="#1E4FB8">SSH :22</text>
+  <text x="392" y="606" class="lbl" fill="#1E4FB8">encrypted</text>
 
-  <!-- friend to cloudflare -->
-  <path d="M380 173 H636" class="orange"/>
-  <text x="430" y="163" class="lbl" fill="#E8590C">HTTPS :443</text>
-  <!-- cloudflared to cloudflare (outbound) -->
   <path d="M1060 465 V225" class="orange"/>
   <text x="1068" y="250" class="lbl" fill="#E8590C">outbound HTTPS :443</text>
   <text x="1068" y="266" class="lbl" fill="#E8590C">(the tunnel)</text>
 
   <!-- Gemini -->
-  <rect x="1240" y="330" width="320" height="130" rx="14" class="box" stroke="#6D4AE8" stroke-width="2"/>
-  <text x="1260" y="360" class="h">Google Gemini Live API</text>
-  <text x="1260" y="382" class="code">generativelanguage.googleapis.com</text>
-  <text x="1260" y="406" class="s">Hears your audio, decides on tools,</text>
-  <text x="1260" y="424" class="s">and streams the spoken answer back.</text>
-  <text x="1260" y="446" class="s">Authenticated with the API key.</text>
+  <rect x="1240" y="330" width="320" height="300" rx="14" class="box" stroke="#6D4AE8" stroke-width="2"/>
+  <circle cx="1262" cy="356" r="12" fill="#C8961E"/><text x="1262" y="361" class="badge" text-anchor="middle">6</text>
+  <text x="1282" y="362" class="h">Gemini Live API</text>
+  <text x="1260" y="384" class="code">generativelanguage.googleapis.com</text>
+  <text x="1260" y="406" class="s">Google's real-time voice AI model</text>
+  <rect x="1256" y="420" width="288" height="196" rx="10" fill="#F4F0FF" stroke="#B9A6F9"/>
+  <circle cx="1276" cy="442" r="12" fill="#C8961E"/><text x="1276" y="447" class="badge" text-anchor="middle">8</text>
+  <text x="1296" y="447" class="ts">How the AI voice is made</text>
+  <text x="1272" y="474" class="ts" fill="#5B3FD6">Listens</text>
+  <text x="1272" y="492" class="s">Speech to text on your audio</text>
+  <text x="1272" y="520" class="ts" fill="#5B3FD6">Thinks</text>
+  <text x="1272" y="538" class="s">Model + DevOps Shack persona;</text>
+  <text x="1272" y="555" class="s">may ask for a DevOps tool</text>
+  <text x="1272" y="583" class="ts" fill="#5B3FD6">Speaks</text>
+  <text x="1272" y="601" class="s">Text to speech, voice “Aoede”, 24 kHz</text>
 
-  <path d="M1080 620 H1180 V400 H1236" class="purple"/>
-  <text x="1188" y="520" class="lbl" fill="#6D4AE8">outbound</text>
-  <text x="1188" y="536" class="lbl" fill="#6D4AE8">secure</text>
-  <text x="1188" y="552" class="lbl" fill="#6D4AE8">WebSocket</text>
-  <text x="1188" y="568" class="lbl" fill="#6D4AE8">:443</text>
+  <path d="M1046 760 H1185 V480 H1236" class="purple"/>
+  <path d="M1236 500 H1200 V780 H1050" class="purple"/>
+  <text x="1210" y="650" class="lbl" fill="#6D4AE8">TLS :443</text>
+  <text x="1210" y="666" class="lbl" fill="#6D4AE8">audio in,</text>
+  <text x="1210" y="682" class="lbl" fill="#6D4AE8">voice out</text>
 
   <!-- GitHub -->
-  <rect x="1240" y="640" width="320" height="230" rx="14" class="box" stroke="#334155" stroke-width="2"/>
-  <text x="1260" y="670" class="h">GitHub</text>
-  <text x="1260" y="692" class="s">Repo: DevOps-Shack-AI-Voice-Assistant</text>
-  <text x="1260" y="720" class="t" font-size="14">GitHub Actions on every push / PR</text>
-  <text x="1260" y="742" class="s">• pytest (unit tests)</text>
-  <text x="1260" y="760" class="s">• pip-audit (vulnerable libraries)</text>
-  <text x="1260" y="778" class="s">• Bandit (insecure Python code)</text>
-  <text x="1260" y="796" class="s">• Gitleaks (leaked secrets)</text>
-  <text x="1260" y="814" class="s">• Trivy (container image)</text>
-  <text x="1260" y="832" class="s">• OWASP ZAP (live web scan)</text>
-  <text x="1260" y="856" class="s">ZAP report saved as a build artifact</text>
+  <rect x="1240" y="700" width="320" height="230" rx="14" class="box" stroke="#334155" stroke-width="2"/>
+  <text x="1260" y="730" class="h">GitHub</text>
+  <text x="1260" y="752" class="s">Repo: DevOps-Shack-AI-Voice-Assistant</text>
+  <text x="1260" y="780" class="ts">GitHub Actions on every push / PR</text>
+  <text x="1260" y="802" class="s">• pytest (unit tests)</text>
+  <text x="1260" y="820" class="s">• pip-audit (vulnerable libraries)</text>
+  <text x="1260" y="838" class="s">• Bandit (insecure Python code)</text>
+  <text x="1260" y="856" class="s">• Gitleaks (leaked secrets)</text>
+  <text x="1260" y="874" class="s">• Trivy (container image)</text>
+  <text x="1260" y="892" class="s">• OWASP ZAP (live web scan)</text>
+  <text x="1260" y="916" class="s">ZAP report saved as a build artifact</text>
+  <path d="M1080 930 H1236" class="gray"/>
+  <text x="1168" y="952" class="lbl" fill="#475569">git pull</text>
+  <text x="1168" y="968" class="lbl" fill="#475569">:443</text>
 
-  <path d="M1080 770 H1236" class="gray"/>
-  <text x="1168" y="792" class="lbl" fill="#475569">git pull</text><text x="1168" y="808" class="lbl" fill="#475569">:443</text>
-
-  <!-- PC push to GitHub -->
-  <path d="M210 620 V950 H1400 V874" class="gray"/>
-  <text x="560" y="940" class="lbl" fill="#475569">git push / merge pull requests (HTTPS :443)</text>
+  <path d="M210 690 V1090 H1400 V934" class="gray"/>
+  <text x="560" y="1080" class="lbl" fill="#475569">git push / merge pull requests (HTTPS :443)</text>
 
   <!-- Legend -->
-  <rect x="40" y="975" width="1520" height="135" rx="14" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
-  <text x="64" y="1006" class="h" font-size="16">Legend</text>
-  <path d="M64 1032 H124" stroke="#1E4FB8" stroke-width="3"/><text x="136" y="1037" class="s">Your private access: SSH tunnel</text>
-  <path d="M64 1058 H124" stroke="#E8590C" stroke-width="2.4" stroke-dasharray="8 5"/><text x="136" y="1063" class="s">Optional sharing: Cloudflare quick tunnel</text>
-  <path d="M64 1084 H124" stroke="#6D4AE8" stroke-width="2.6"/><text x="136" y="1089" class="s">AI voice traffic to Gemini</text>
-  <path d="M420 1032 H480" stroke="#475569" stroke-width="2.2" stroke-dasharray="4 4"/><text x="492" y="1037" class="s">Code and deployment</text>
-  <rect x="420" y="1050" width="60" height="16" rx="3" fill="none" stroke="#E03131" stroke-width="2" stroke-dasharray="9 5"/><text x="492" y="1063" class="s">Firewall (security group)</text>
+  <rect x="40" y="1115" width="1520" height="135" rx="14" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="64" y="1146" class="h" font-size="16">Legend</text>
+  <path d="M64 1172 H124" stroke="#1E4FB8" stroke-width="3"/><text x="136" y="1177" class="s">Your private access: SSH tunnel</text>
+  <path d="M64 1198 H124" stroke="#E8590C" stroke-width="2.4" stroke-dasharray="8 5"/><text x="136" y="1203" class="s">Optional sharing: Cloudflare quick tunnel</text>
+  <path d="M64 1224 H124" stroke="#6D4AE8" stroke-width="2.6"/><text x="136" y="1229" class="s">AI voice traffic to and from Gemini</text>
+  <path d="M420 1172 H480" stroke="#475569" stroke-width="2.2" stroke-dasharray="4 4"/><text x="492" y="1177" class="s">Code and deployment</text>
+  <rect x="420" y="1190" width="60" height="16" rx="3" fill="none" stroke="#E03131" stroke-width="2" stroke-dasharray="9 5"/><text x="492" y="1203" class="s">Firewall (security group)</text>
+  <text x="820" y="1146" class="h" font-size="16">Why this is safe</text>
+  <text x="820" y="1172" class="s">• Only port 22 is open. The app itself is not exposed to the internet.</text>
+  <text x="820" y="1194" class="s">• All traffic is encrypted (SSH, HTTPS or TLS WebSocket).</text>
+  <text x="820" y="1216" class="s">• The Gemini key stays on the server. Every change is scanned in CI.</text>
+  <text x="820" y="1238" class="s">• Deploy: git pull, uv sync --frozen, sudo systemctl restart voiceops.</text>
 
-  <text x="820" y="1006" class="h" font-size="16">Why this is safe</text>
-  <text x="820" y="1032" class="s">• Only port 22 is open. The app itself is not exposed to the internet.</text>
-  <text x="820" y="1054" class="s">• All traffic is encrypted (SSH, HTTPS or TLS WebSocket).</text>
-  <text x="820" y="1076" class="s">• The Gemini key stays on the server. Every change is scanned in CI.</text>
-  <text x="820" y="1098" class="s">• Deploy: git pull, uv sync --frozen, sudo systemctl restart voiceops.</text>
+<rect x="40" y="1280" width="1520" height="430" rx="14" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="64" y="1314" class="h">How it works, step by step</text>
+<circle cx="76" cy="1345" r="12" fill="#C8961E"/><text x="76" y="1350" class="badge" text-anchor="middle">1</text>
+<text x="98" y="1350" class="stept">Browser</text>
+<text x="98" y="1370" class="step">The page (frontend/ HTML and JavaScript) opens your mic and turns your voice into small 16 kHz</text>
+<text x="98" y="1388" class="step">audio chunks. You open it at localhost:8000, which travels through the SSH tunnel.</text>
+<circle cx="76" cy="1435" r="12" fill="#C8961E"/><text x="76" y="1440" class="badge" text-anchor="middle">2</text>
+<text x="98" y="1440" class="stept">WebSocket</text>
+<text x="98" y="1460" class="step">A connection that stays open and carries data both ways at once. Audio goes up while the reply</text>
+<text x="98" y="1478" class="step">comes down, which is why you can interrupt the assistant.</text>
+<circle cx="76" cy="1525" r="12" fill="#C8961E"/><text x="76" y="1530" class="badge" text-anchor="middle">3</text>
+<text x="98" y="1530" class="stept">Uvicorn</text>
+<text x="98" y="1550" class="step">The web server program. It listens on 127.0.0.1:8000 (inside the server only) and hands every</text>
+<text x="98" y="1568" class="step">request to FastAPI. systemd keeps it running and restarts it at boot.</text>
+<circle cx="76" cy="1615" r="12" fill="#C8961E"/><text x="76" y="1620" class="badge" text-anchor="middle">4</text>
+<text x="98" y="1620" class="stept">FastAPI</text>
+<text x="98" y="1640" class="step">The Python web framework in app/server.py. It serves the page, answers /api/health, checks the</text>
+<text x="98" y="1658" class="step">origin of the /ws connection and links the browser to Gemini.</text>
+<circle cx="836" cy="1345" r="12" fill="#C8961E"/><text x="836" y="1350" class="badge" text-anchor="middle">5</text>
+<text x="858" y="1350" class="stept">Google GenAI SDK</text>
+<text x="858" y="1370" class="step">Google's Python library. FastAPI uses it to open one live Gemini session per browser tab, signed</text>
+<text x="858" y="1388" class="step">in with the API key from .env, and to stream audio in and out.</text>
+<circle cx="836" cy="1435" r="12" fill="#C8961E"/><text x="836" y="1440" class="badge" text-anchor="middle">6</text>
+<text x="858" y="1440" class="stept">Gemini Live API</text>
+<text x="858" y="1460" class="step">Google's real-time AI model in the cloud. It listens to the audio stream as you talk, works out</text>
+<text x="858" y="1478" class="step">what you asked, and decides whether it needs a tool first.</text>
+<circle cx="836" cy="1525" r="12" fill="#C8961E"/><text x="836" y="1530" class="badge" text-anchor="middle">7</text>
+<text x="858" y="1530" class="stept">DevOps tool functions</text>
+<text x="858" y="1550" class="step">Read-only Python checks in app/tools.py: CPU, memory, disk, open ports, URL health and Docker</text>
+<text x="858" y="1568" class="step">containers. Gemini asks for one, the server runs it, and the result goes back to Gemini and to a</text>
+<text x="858" y="1586" class="step">card on your screen.</text>
+<circle cx="836" cy="1615" r="12" fill="#C8961E"/><text x="836" y="1620" class="badge" text-anchor="middle">8</text>
+<text x="858" y="1620" class="stept">How the AI voice is made</text>
+<text x="858" y="1640" class="step">Gemini writes its answer, turns it into speech with the “Aoede” voice and streams 24 kHz audio</text>
+<text x="858" y="1658" class="step">back through the SDK, FastAPI and the WebSocket to your speaker, with a live transcript.</text>
 </svg>

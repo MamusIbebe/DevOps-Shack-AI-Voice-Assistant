@@ -8,7 +8,7 @@
 
 ![Data flow diagram](diagrams/data-flow.png)
 
-**Network topology:** where each piece runs on AWS EC2, and the only paths traffic can take in and out.
+**Network topology:** where each component (Browser, WebSocket, Uvicorn, FastAPI, Google GenAI SDK, Gemini Live API, DevOps tool functions) runs on AWS EC2, how they connect, and how the AI voice is made. The numbered steps at the bottom explain the process.
 
 ![Network topology diagram](diagrams/network-topology.png)
 
