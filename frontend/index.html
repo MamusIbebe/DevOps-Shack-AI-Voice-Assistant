@@ -18,33 +18,36 @@
        White canvas, silver metal, gold and sparkling yellow.
     ========================================================= */
     :root {
-      --bg: #ffffff;
-      --ivory: #fbfaf6;
-      --ivory-2: #f6f3ea;
+      color-scheme: dark;
 
-      --border: #ece8de;
-      --border-gold: #e6d7a8;
+      --bg: #070d1a;
+      --surface: #0e1729;
+      --ivory: #132038;
+      --ivory-2: #1a2744;
 
-      --text: #1b1b20;
-      --text-2: #575761;
-      --text-3: #8d8d97;
+      --border: #1f2c48;
+      --border-gold: rgba(214, 178, 74, 0.34);
 
-      --gold: #c9a227;
-      --gold-deep: #9a7712;
-      --gold-soft: #f8efd0;
+      --text: #eef1f7;
+      --text-2: #aab4c8;
+      --text-3: #7c88a2;
+
+      --gold: #d4af37;
+      --gold-deep: #e8c766;
+      --gold-soft: rgba(212, 175, 55, 0.12);
       --yellow: #ffd84d;
       --silver: #c4c9d1;
-      --silver-deep: #868c97;
-      --graphite: #2c2e35;
+      --silver-deep: #9aa3b5;
+      --graphite: #dfe4ee;
 
-      --green: #1f9d6b;
-      --red: #c2410c;
+      --green: #34d399;
+      --red: #fb923c;
 
       --gold-grad: linear-gradient(135deg, #fbe9a2 0%, #e8c35a 28%, #c9a227 52%, #f6d977 76%, #b48b17 100%);
       --silver-grad: linear-gradient(145deg, #ffffff 0%, #e7e9ed 26%, #b9bec7 52%, #f0f1f4 74%, #a2a8b3 100%);
 
-      --shadow-sm: 0 1px 2px rgba(27, 27, 32, 0.04), 0 8px 24px rgba(27, 27, 32, 0.05);
-      --shadow-md: 0 2px 6px rgba(27, 27, 32, 0.04), 0 24px 60px rgba(27, 27, 32, 0.08);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.3), 0 24px 60px rgba(0, 0, 0, 0.4);
       --shadow-gold: 0 10px 30px rgba(201, 162, 39, 0.28);
 
       --serif: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -62,13 +65,15 @@
 
     html, body { min-height: 100%; }
 
+    html { background: var(--bg); }
+
     body {
       margin: 0;
       color: var(--text);
       font-family: var(--sans);
       font-size: 15px;
       line-height: 1.6;
-      background: var(--bg);
+      background: radial-gradient(ellipse 90% 700px at 50% -120px, #14254d 0%, rgba(20, 37, 77, 0) 100%) no-repeat, var(--bg);
       -webkit-font-smoothing: antialiased;
     }
 
@@ -80,8 +85,8 @@
       pointer-events: none;
       z-index: 0;
       background:
-        radial-gradient(ellipse 60% 70% at 15% 0%, rgba(255, 216, 77, 0.10), transparent 70%),
-        radial-gradient(ellipse 50% 60% at 90% 10%, rgba(196, 201, 209, 0.22), transparent 70%);
+        radial-gradient(ellipse 60% 70% at 15% 0%, rgba(255, 216, 77, 0.08), transparent 70%),
+        radial-gradient(ellipse 50% 60% at 90% 10%, rgba(120, 150, 220, 0.12), transparent 70%);
     }
 
     a { color: var(--gold-deep); text-decoration-color: var(--border-gold); text-underline-offset: 3px; }
@@ -123,7 +128,7 @@
       font-weight: 600;
       font-size: 17px;
       letter-spacing: 0.5px;
-      color: var(--gold-deep);
+      color: #7d600b;
       background: var(--silver-grad);
       box-shadow: inset 0 0 0 2px #fff, 0 0 0 1.5px var(--gold), var(--shadow-sm);
     }
@@ -165,8 +170,8 @@
 
     .badge.live {
       color: var(--green);
-      background: #f0faf5;
-      border-color: #c9ebd9;
+      background: rgba(52, 211, 153, 0.10);
+      border-color: rgba(52, 211, 153, 0.32);
     }
 
     /* =========================================================
@@ -226,7 +231,7 @@
 
     .card {
       position: relative;
-      background: var(--bg);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-md);
@@ -311,7 +316,7 @@
     }
 
     .safe-pill {
-      color: var(--graphite);
+      color: #1b2030;
       background: var(--silver-grad);
       border: 1px solid var(--silver);
     }
@@ -558,7 +563,7 @@
       padding: 12px 18px;
       font-size: 14px;
       color: var(--graphite);
-      background: var(--bg);
+      background: transparent;
       border: 1px solid var(--silver);
       box-shadow: var(--shadow-sm);
     }
@@ -607,7 +612,7 @@
       font-size: 13px;
       font-weight: 500;
       color: var(--graphite);
-      background: var(--bg);
+      background: var(--surface);
       border: 1px solid var(--border-gold);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -679,8 +684,8 @@
 
     .bubble.you {
       align-self: flex-end;
-      background: linear-gradient(145deg, #f7f8fa, #eceef2);
-      border: 1px solid #dfe2e7;
+      background: linear-gradient(145deg, #1d2a48, #17223d);
+      border: 1px solid #2c3a5c;
       border-top-right-radius: 6px;
     }
 
@@ -699,7 +704,7 @@
     .capability {
       padding: 22px;
       border-radius: var(--radius-md);
-      background: var(--bg);
+      background: var(--surface);
       border: 1px solid var(--border);
       box-shadow: var(--shadow-sm);
       transition: transform 0.2s ease, border-color 0.2s ease;
@@ -777,11 +782,11 @@
       font-weight: 600;
       letter-spacing: 0.6px;
       color: var(--green);
-      background: #f0faf5;
-      border: 1px solid #c9ebd9;
+      background: rgba(52, 211, 153, 0.10);
+      border: 1px solid rgba(52, 211, 153, 0.32);
     }
 
-    .activity-status.error { color: var(--red); background: #fff4ed; border-color: #fed7aa; }
+    .activity-status.error { color: var(--red); background: rgba(251, 146, 60, 0.10); border-color: rgba(251, 146, 60, 0.35); }
 
     .command {
       margin-top: 10px;
@@ -789,8 +794,8 @@
       border-radius: 10px;
       font-family: var(--mono);
       font-size: 12.5px;
-      color: #e9e3cf;
-      background: var(--graphite);
+      color: #efe6c6;
+      background: #050a15;
       border-left: 3px solid var(--gold);
       overflow-x: auto;
       word-break: break-word;
