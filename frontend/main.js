@@ -479,7 +479,7 @@ function connect() {
 
     talkBtn.disabled = false;
     talkBtn.textContent =
-      "🎙 Start Live Session";
+      "Start live session";
 
     stopBtn.hidden = true;
     endBtn.hidden = true;
@@ -811,7 +811,7 @@ async function go() {
     talkBtn.disabled = false;
 
     talkBtn.textContent =
-      "🎙 Start Live Session";
+      "Start live session";
 
     setOrb("idle");
 
@@ -965,3 +965,23 @@ document
     );
 
   });
+
+
+/* -------------------------------------------------------
+   CLICKING THE MIC STARTS A SESSION
+------------------------------------------------------- */
+
+function startFromOrb() {
+  if (!talkBtn.disabled) {
+    talkBtn.click();
+  }
+}
+
+orb.addEventListener("click", startFromOrb);
+
+orb.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    startFromOrb();
+  }
+});
