@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B7791F"/>
+    </marker>
+    <style>
+      .title{font-size:34px;font-weight:700;fill:#0F172A}
+      .sub{font-size:17px;fill:#475569}
+      .lane{font-size:19px;font-weight:700}
+      .lanesub{font-size:13.5px;fill:#475569}
+      .bt{font-size:16px;font-weight:600;fill:#0F172A}
+      .bs{font-size:13px;fill:#475569}
+      .code{font-family:'JetBrains Mono',Consolas,monospace;font-size:12.5px;fill:#334155}
+      .lbl{font-size:13px;fill:#1E293B;font-weight:500}
+      .badge{font-size:14px;font-weight:700;fill:#fff}
+      .step{font-size:14.5px;fill:#1E293B}
+      .stepb{font-size:14.5px;font-weight:700;fill:#0F172A}
+      .box{fill:#fff;stroke-width:1.5}
+      .line{stroke:#334155;stroke-width:2.2;fill:none;marker-end:url(#arr)}
+      .tline{stroke:#B7791F;stroke-width:2.2;fill:none;marker-end:url(#arrG)}
+    </style>
+  </defs>
+  <rect width="1600" height="1040" fill="#F8FAFC"/>
+
+  <text x="40" y="58" class="title">VoiceOps Assistant: Data Flow</text>
+  <text x="40" y="88" class="sub">How one spoken question becomes a spoken answer. Numbers follow the order things happen.</text>
+
+  <!-- Lane A: Browser -->
+  <rect x="40" y="120" width="420" height="680" rx="18" fill="#EEF4FF" stroke="#3B6FD8" stroke-width="2"/>
+  <text x="62" y="152" class="lane" fill="#1E4FB8">Your browser</text>
+  <text x="62" y="173" class="lanesub">Windows PC, page at http://localhost:8000</text>
+
+  <rect x="70" y="200" width="360" height="62" rx="12" class="box" stroke="#3B6FD8"/>
+  <text x="90" y="227" class="bt">Microphone</text>
+  <text x="90" y="248" class="bs">Echo cancel and noise suppression on</text>
+
+  <rect x="70" y="290" width="360" height="72" rx="12" class="box" stroke="#3B6FD8"/>
+  <text x="90" y="316" class="bt">Audio converter</text>
+  <text x="90" y="337" class="bs">Turns sound into 16 kHz, 16-bit PCM chunks</text>
+  <text x="90" y="354" class="code">frontend/pcm-processor.js</text>
+
+  <rect x="70" y="565" width="360" height="62" rx="12" class="box" stroke="#3B6FD8"/>
+  <text x="90" y="592" class="bt">Speaker</text>
+  <text x="90" y="613" class="bs">Plays the assistant's 24 kHz voice</text>
+
+  <rect x="70" y="680" width="360" height="90" rx="12" class="box" stroke="#3B6FD8"/>
+  <text x="90" y="707" class="bt">Screen</text>
+  <text x="90" y="728" class="bs">Live transcript of you and the assistant,</text>
+  <text x="90" y="746" class="bs">plus a card for every tool it ran</text>
+  <text x="90" y="764" class="code">frontend/main.js</text>
+
+  <!-- Lane B: Server -->
+  <rect x="560" y="120" width="500" height="680" rx="18" fill="#FFF8EB" stroke="#C8961E" stroke-width="2"/>
+  <text x="582" y="152" class="lane" fill="#8A5A00">VoiceOps server on AWS EC2</text>
+  <text x="582" y="173" class="lanesub">FastAPI + Uvicorn, app/server.py, WebSocket /ws</text>
+
+  <rect x="590" y="200" width="440" height="62" rx="12" class="box" stroke="#C8961E"/>
+  <text x="610" y="227" class="bt">Gatekeeper on /ws</text>
+  <text x="610" y="248" class="bs">Accepts the socket only from its own page (same origin)</text>
+
+  <rect x="590" y="290" width="440" height="62" rx="12" class="box" stroke="#C8961E"/>
+  <text x="610" y="317" class="bt">Upstream task</text>
+  <text x="610" y="338" class="bs">Forwards each mic chunk to Gemini as it arrives</text>
+
+  <rect x="590" y="385" width="440" height="150" rx="12" class="box" stroke="#B7791F" stroke-dasharray="0"/>
+  <text x="610" y="411" class="bt">Tool runner (read-only)</text>
+  <text x="610" y="430" class="code">app/tools.py</text>
+  <text x="610" y="455" class="bs">• CPU, memory and disk usage</text>
+  <text x="610" y="475" class="bs">• Is a TCP port open?</text>
+  <text x="610" y="495" class="bs">• Does a URL respond? (cloud metadata IPs blocked)</text>
+  <text x="610" y="515" class="bs">• List Docker containers (if docker.sock exists)</text>
+
+  <rect x="590" y="565" width="440" height="62" rx="12" class="box" stroke="#C8961E"/>
+  <text x="610" y="592" class="bt">Downstream task</text>
+  <text x="610" y="613" class="bs">Relays voice, transcripts and status to the browser</text>
+
+  <rect x="590" y="680" width="440" height="90" rx="12" fill="#FFFDF7" stroke="#E4C77A" stroke-dasharray="5 4" stroke-width="1.5"/>
+  <text x="610" y="705" class="bs" font-weight="600" fill="#8A5A00">Behind the scenes</text>
+  <text x="610" y="725" class="bs">• One Gemini session per open browser tab</text>
+  <text x="610" y="744" class="bs">• Gemini API key read from .env, never sent to the browser</text>
+  <text x="610" y="763" class="bs">• Runs as systemd service “voiceops” on 127.0.0.1:8000</text>
+
+  <!-- Lane C: Gemini -->
+  <rect x="1160" y="120" width="400" height="680" rx="18" fill="#F4F0FF" stroke="#7A5AF8" stroke-width="2"/>
+  <text x="1182" y="152" class="lane" fill="#5B3FD6">Google Gemini Live API</text>
+  <text x="1182" y="173" class="lanesub">Google's cloud, reached over secure WebSocket (TLS)</text>
+
+  <rect x="1190" y="290" width="340" height="62" rx="12" class="box" stroke="#7A5AF8"/>
+  <text x="1210" y="317" class="bt">Listens</text>
+  <text x="1210" y="338" class="bs">Speech to text (your words)</text>
+
+  <rect x="1190" y="385" width="340" height="150" rx="12" class="box" stroke="#7A5AF8"/>
+  <text x="1210" y="411" class="bt">Thinks</text>
+  <text x="1210" y="433" class="bs">Gemini model with the DevOps Shack</text>
+  <text x="1210" y="451" class="bs">persona (app/persona.py)</text>
+  <text x="1210" y="478" class="bs">Decides: answer directly, or ask the</text>
+  <text x="1210" y="496" class="bs">server to run a tool first</text>
+
+  <rect x="1190" y="565" width="340" height="62" rx="12" class="box" stroke="#7A5AF8"/>
+  <text x="1210" y="592" class="bt">Speaks</text>
+  <text x="1210" y="613" class="bs">Text to speech, voice “Aoede”</text>
+
+  <!-- internal arrows -->
+  <path d="M250 262 V286" class="line"/>
+  <path d="M1360 352 V381" class="line"/>
+  <path d="M1360 535 V561" class="line"/>
+
+  <!-- 1: mic chunks to server -->
+  <path d="M430 321 H586" class="line"/>
+  <text x="440" y="310" class="lbl">audio chunks</text>
+  <circle cx="545" cy="321" r="13" fill="#1E4FB8"/><text x="545" y="326" class="badge" text-anchor="middle">1</text>
+
+  <!-- 2: server to Gemini -->
+  <path d="M1030 321 H1186" class="line"/>
+  <text x="1042" y="310" class="lbl">audio stream</text>
+  <circle cx="1155" cy="321" r="13" fill="#1E4FB8"/><text x="1155" y="326" class="badge" text-anchor="middle">2</text>
+
+  <!-- 3: tool call -->
+  <path d="M1190 430 H1034" class="tline"/>
+  <text x="1046" y="420" class="lbl" fill="#8A5A00">tool request</text>
+  <circle cx="1155" cy="430" r="13" fill="#B7791F"/><text x="1155" y="435" class="badge" text-anchor="middle">3</text>
+
+  <!-- 4: tool result back -->
+  <path d="M1030 495 H1186" class="tline"/>
+  <text x="1042" y="485" class="lbl" fill="#8A5A00">tool result</text>
+  <circle cx="1155" cy="495" r="13" fill="#B7791F"/><text x="1155" y="500" class="badge" text-anchor="middle">4</text>
+
+  <!-- 4b: tool card to screen -->
+  <path d="M590 515 H540 V745 H434" class="tline"/>
+  <text x="440" y="737" class="lbl" fill="#8A5A00">tool card</text>
+
+  <!-- 5: Gemini voice back -->
+  <path d="M1190 596 H1034" class="line"/>
+  <text x="1042" y="586" class="lbl">voice + text</text>
+  <circle cx="1155" cy="596" r="13" fill="#5B3FD6"/><text x="1155" y="601" class="badge" text-anchor="middle">5</text>
+
+  <!-- 6: voice to speaker -->
+  <path d="M590 596 H434" class="line"/>
+  <text x="440" y="586" class="lbl">voice audio</text>
+  <circle cx="545" cy="596" r="13" fill="#5B3FD6"/><text x="545" y="601" class="badge" text-anchor="middle">6</text>
+
+  <!-- 6b: transcript to screen -->
+  <path d="M590 615 H515 V705 H434" class="line"/>
+  <text x="440" y="697" class="lbl">transcript</text>
+
+  <!-- Steps -->
+  <rect x="40" y="830" width="1520" height="180" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="66" y="864" class="stepb">What happens, step by step</text>
+  <circle cx="78" cy="893" r="11" fill="#1E4FB8"/><text x="78" y="898" class="badge" text-anchor="middle" font-size="12">1</text>
+  <text x="98" y="898" class="step">You talk. The page sends small audio chunks to the server over a WebSocket.</text>
+  <circle cx="78" cy="925" r="11" fill="#1E4FB8"/><text x="78" y="930" class="badge" text-anchor="middle" font-size="12">2</text>
+  <text x="98" y="930" class="step">The server streams them straight on to Gemini Live.</text>
+  <circle cx="78" cy="957" r="11" fill="#B7791F"/><text x="78" y="962" class="badge" text-anchor="middle" font-size="12">3</text>
+  <text x="98" y="962" class="step">If you asked about the server (“how busy is the CPU?”), Gemini asks for a tool.</text>
+  <circle cx="820" cy="893" r="11" fill="#B7791F"/><text x="820" y="898" class="badge" text-anchor="middle" font-size="12">4</text>
+  <text x="840" y="898" class="step">The server runs that read-only check, sends the result to Gemini and a card to your screen.</text>
+  <circle cx="820" cy="925" r="11" fill="#5B3FD6"/><text x="820" y="930" class="badge" text-anchor="middle" font-size="12">5</text>
+  <text x="840" y="930" class="step">Gemini replies with spoken audio plus text of what both of you said.</text>
+  <circle cx="820" cy="957" r="11" fill="#5B3FD6"/><text x="820" y="962" class="badge" text-anchor="middle" font-size="12">6</text>
+  <text x="840" y="962" class="step">The server passes the voice to your speaker and the transcript to your screen.</text>
+  <text x="66" y="994" class="bs">Everything streams both ways at once, so you can interrupt the assistant mid-sentence and it stops talking.</text>
+</svg>
