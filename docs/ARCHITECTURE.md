@@ -2,6 +2,18 @@
 
 ## DevOps Shack VoiceOps Assistant
 
+### Diagrams
+
+**Data flow:** how one spoken question becomes a spoken answer.
+
+![Data flow diagram](diagrams/data-flow.png)
+
+**Network topology:** where each component (Browser, WebSocket, Uvicorn, FastAPI, Google GenAI SDK, Gemini Live API, DevOps tool functions) runs on AWS EC2, how they connect, and how the AI voice is made. The numbered steps at the bottom explain the process.
+
+![Network topology diagram](diagrams/network-topology.png)
+
+Editable SVG versions sit next to the PNGs in `docs/diagrams/`.
+
 The application is intentionally small so the real-time voice flow is easy to understand and demo.
 
 ```text
