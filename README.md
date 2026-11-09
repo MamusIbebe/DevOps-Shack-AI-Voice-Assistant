@@ -4,6 +4,8 @@ A DevOps Shack–branded real-time AI voice assistant for DevOps learning, troub
 
 The browser captures microphone audio and streams it over WebSocket to a FastAPI backend. The backend keeps a Gemini Live session open, streams the assistant's voice back to the browser, and exposes a small set of read-only DevOps tools.
 
+> **New here?** Follow the [start-to-finish AWS EC2 guide](docs/AWS_EC2_GUIDE.md) to build and deploy it step by step, or [watch the demo](docs/guide/voiceops-demo.mp4).
+
 ## Project structure
 
 ```text
@@ -298,6 +300,7 @@ Built-in protections: the voice socket only accepts pages served by this app (sa
 
 ## Documentation
 
+- [`docs/AWS_EC2_GUIDE.md`](docs/AWS_EC2_GUIDE.md) — **start here:** beginner's start-to-finish guide to deploying on AWS EC2, with diagrams, a demo video and troubleshooting
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — application and runtime architecture
 - [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) — native local execution
 - [`docs/DOCKER_COMPOSE.md`](docs/DOCKER_COMPOSE.md) — Docker Compose execution
